@@ -123,3 +123,12 @@
 /data/.tp(/.*)?                                                 u:object_r:thermal_manager_data_file:s0
 
 /sys/devices/virtual/meizu/ps/ps_calibration                    u:object_r:meizu_ps_calibration_trigger:s0
+
+# Mobicore
+/data/app/mcRegistry(/.*)? u:object_r:mobicore_data_file:s0
+/data/misc/mcRegistry(/.*)? u:object_r:mobicore_data_file:s0
+/dev/mobicore u:object_r:mobicore_admin_device:s0
+/dev/mobicore-user u:object_r:mobicore_user_device:s0
+/dev/t-base-tui u:object_r:mobicore_tui_device:s0
+/(system\/vendor|vendor)/bin/mcDriverDaemon u:object_r:mobicore_exec:s0
+/(system\/vendor|vendor)/app/mcRegistry(/.*)? u:object_r:mobicore_data_file:s0

@@ -125,8 +125,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/root/twrp.fstab:recovery/root/etc/twrp.fstab \
     $(LOCAL_PATH)/rootdir/root/ueventd.mt6755.rc:root/ueventd.mt6755.rc \
     $(LOCAL_PATH)/rootdir/root/init.project.rc:root/init.project.rc \
+    $(LOCAL_PATH)/rootdir/root/init.trustonic.rc:root/init.trustonic.rc \
     $(LOCAL_KERNEL):kernel
-
+     
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
