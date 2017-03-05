@@ -6,6 +6,17 @@ on init
     mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
     mkdir /storage/usbotg 0700 root root
 
+#Gionee <duanyh> <2016-1-20> modify for KPH begin
+    mkdir /data/app/mcRegistry 0775 system system
+    mkdir /data/app/mcRegistry/TbStorage 0775 system system
+    chmod 0600 /dev/mobicore
+    chown system system /dev/mobicore
+    chmod 0666 /dev/mobicore-user
+    chown system system /dev/mobicore-user
+    # MobiCore Daemon Paths
+    export MC_AUTH_TOKEN_PATH /efs
+    start mobicore
+
 on post-fs-data
 
 #
@@ -43,18 +54,34 @@ on post-fs-data
     chown system system /dev/wmtWifi
 
 #Camera
+    chmod 0660 /dev/MAINAF
+    chown system camera /dev/MAINAF
+
+    chmod 0660 /dev/MAINAF2
+    chown system camera /dev/MAINAF2
+
+    chmod 0660 /dev/SUBAF
+    chown system camera /dev/SUBAF
+
     chmod 0660 /dev/GAF001AF
     chown system camera /dev/GAF001AF
 
     chmod 0660 /dev/DW9714AF
     chown system camera /dev/DW9714AF
 
+    chmod 0660 /dev/DW9800WAF
+    chown system camera /dev/DW9800WAF
+
     chmod 0660 /dev/LC898212AF
     chown system camera /dev/LC898212AF
+
+    chmod 0666 /sys/class/flashlightdrv/kd_camera_flashlight/torch 
+    chown system camera /sys/class/flashlightdrv/kd_camera_flashlight/torch 
 
     chmod 0660 /dev/BU64745GWZAF
     chown system camera /dev/BU64745GWZAF
 
+chmod 0666 /dev/i2c-3
 #SMB
     chown system system /proc/smb/ScreenComm
     chmod 0660 /proc/smb/ScreenComm
@@ -93,25 +120,30 @@ on post-fs-data
     chown bluetooth bluetooth /dev/ampc0
     chmod 0660 /dev/ampc0
 
-# for gesture
-    chown system system /sys/devices/mx_tsp/gesture_control
-    chown system system /sys/devices/mx_tsp/gesture_data
-
-# for notification light
-    chown system system /sys/devices/mx_leds/leds_mode
-
-#FLYME_EDIT:zhouyueguo@SHELL.PowerSavingMode.Feature Permissions add for power saving mode {@
-#Permissions for power saving mode
-        chown system system /sys/power/power_mode
-        chmod 0660 /sys/power/power_mode
-#@}
-
 #
 # Connectivity related device nodes & configuration (end)
 #
 
-# Encrypt phone function
-    setprop vold.post_fs_data_done 1
+#    chmod 0660 /dev/spm
+#    chown system system /dev/spm
+
+#Gionee 20161026 huahy add for CR01564251 start
+    setprop MC_AUTH_TOKEN_PATH "/data/misc/gionee"
+#Gionee 20161026 huahy add for CR01564251 end
+
+on init
+    # Refer to http://source.android.com/devices/tech/storage/index.html
+    # It said, "Starting in Android 4.4, multiple external storage devices are surfaced to developers through
+    #           Context.getExternalFilesDirs(), Context.getExternalCacheDirs(), and Context.getObbDirs().
+    #           External storage devices surfaced through these APIs must be a semi-permanent part of the device (such as an SD card slot in a battery compartment).
+    #           Developers expect data stored in these locations to be available over long periods of time."
+    # Therefore, if the target doesn't support sd hot-plugging (Ex: the SD card slot in a battery compartment), we need to export SECONDARY_STORAGE in 'boot' section
+    #
+    # export SECONDARY_STORAGE /storage/sdcard1
+
+service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usbotg /storage/usbotg
+    class late_start
+    disabled
 
 #
 # Connectivity related services (Begin)
@@ -138,6 +170,7 @@ service atcid-daemon-e /system/bin/atcid
 on early_property:ro.build.type=eng
 start atci_service
 start atcid-daemon-e
+
 service audio-daemon /system/bin/audiocmdservice_atci
     class main
     socket atci-audio stream 660 media system
@@ -147,10 +180,10 @@ service audio-daemon /system/bin/audiocmdservice_atci
     oneshot
 
 service wmtLoader /system/bin/wmt_loader
-    user root
-    group root
-   class core
-    oneshot
+     user root
+     group root
+     class core
+     oneshot
 
 
 service conn_launcher /system/bin/6620_launcher -p /system/etc/firmware/
@@ -158,7 +191,77 @@ service conn_launcher /system/bin/6620_launcher -p /system/etc/firmware/
     group system
     class core
 
+on property:service.wcn.coredump.mode=2
+start stp_dump
+
+service stp_dump /system/bin/stp_dump3
+    user root
+    group root
+    class core
+    disabled
+    oneshot
+
 #
 # Connectivity related services (End)
 #
 
+service spm_script /system/bin/spm_loader
+    user root
+    group root
+    class core
+    oneshot
+
+#
+# Rilproxy used to control ril request/urc/response for gsm rild and c2k rild
+#
+#service ril-proxy /system/bin/rilproxy -l mtk-rilproxy.so
+#    class core
+#    socket rild stream 660 root radio
+#    socket rild2 stream 660 root radio
+#    socket rild3 stream 660 root radio
+#    socket rild4 stream 660 root radio
+#    socket rilproxy-atci stream 660 root radio
+#    socket rilproxy-mal stream 660 radio system
+#    socket sap_uim_socket1 stream 660 bluetooth bluetooth
+#    socket sap_uim_socket2 stream 660 bluetooth bluetooth
+#    socket sap_uim_socket3 stream 660 bluetooth bluetooth
+#    socket sap_uim_socket4 stream 660 bluetooth bluetooth
+#    user root
+#    group radio cache inet misc audio sdcard_r sdcard_rw log system
+#    oneshot
+#    disabled
+
+#service ril-daemon-mtk /system/bin/mtkrild
+#    class core
+#    socket mrild stream 660 root radio
+#    socket mrild2 stream 660 root radio
+#    socket mrild3 stream 660 root radio
+#    socket mrild4 stream 660 root radio
+#    socket rild-ims stream 660 root radio
+#    socket rild-debug stream 660 radio system
+#    socket rild-oem stream 660 radio system
+#    socket rild-mtk-ut stream 660 radio net_bt
+#    socket rild-mtk-ut-2 stream 660 radio net_bt
+#    socket rild-mtk-modem stream 660 radio system
+#    socket rild-atci stream 660 root radio
+#    socket rild-mal stream 660 radio system
+#    socket rild-mal-at stream 660 radio system
+#    socket rild-vsim stream 660 root radio
+#    socket msap_uim_socket1 stream 660 radio radio
+#    socket msap_uim_socket2 stream 660 radio radio
+#    socket msap_uim_socket3 stream 660 radio radio
+#    socket msap_uim_socket4 stream 660 radio radio
+#    user root
+#    group radio cache inet misc audio sdcard_r sdcard_rw log system
+#    disabled
+#    oneshot
+
+#Gionee <zhouzq> <2016-02-20> modify for KPH begin
+    mkdir /data/app/mcRegistry 0775 system system
+
+    setprop MC_AUTH_TOKEN_PATH "/data/misc/gionee"
+    chmod 0775 /data/misc/gionee
+
+#Gionee <zhouzq> <2016-02-20> modify for KPH end
+#on property:ril.rilproxy=1
+#    start ril-proxy

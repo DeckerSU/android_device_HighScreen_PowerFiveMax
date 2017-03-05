@@ -56,6 +56,15 @@ on init
 # change lk_env permission
     chown root system /proc/lk_env
     chmod 0660 /proc/lk_env
+    chmod 0666 /dev/kmsg
+chmod 0666 /dev/i2c-3
+chown  system system /dev/ttyMT1
+chown  system system /dev/ttyMT0
+chmod 0666 /dev/ttyMT1
+chmod 0666 /dev/ttyMT0
+# increase sysctl_rmem_max and sysctl_wmem_max values to 2M
+    write /proc/sys/net/core/wmem_max 2097152
+    write /proc/sys/net/core/rmem_max 2097152
 
 #usbotg
     mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
@@ -105,6 +114,7 @@ on fs
    mount iso9660 loop@/system/etc/iAmCdRom.iso /mnt/cd-rom ro
 
 on post-fs
+    write /proc/bootprof "INIT:post-fs"
     # Support legacy paths
     symlink /sdcard /storage/sdcard0
 
@@ -138,6 +148,7 @@ on post-fs
     chmod 0771 /system/bin/sbchk
 
 on post-fs-data
+    write /proc/bootprof "INIT:post-fs-data"
     chown system system /persist
     chmod 0771 /persist
 
@@ -166,6 +177,8 @@ on post-fs-data
     mkdir /data/gps_mnl 0771 gps system
     mkdir /data/misc/gps 0771 gps system
     restorecon_recursive /data/misc/gps
+    chown gps system /data/mpe_mnl
+    chmod 0775 /system/xbin/MPED
 
     # NFC
     mkdir /data/nfc_socket 0771 nfc radio
@@ -333,21 +346,25 @@ on post-fs-data
     chown system system /sys/class/misc/m_alsps_misc/alsdelay
     chown system system /sys/class/misc/m_alsps_misc/alsbatch
     chown system system /sys/class/misc/m_alsps_misc/alsflush
-    
-    /*dixiaobing@wind-mobi.com 20150629 start*/
-    chown system system /sys/class/misc/m_alsals_misc/alsactive
-    chown system system /sys/class/misc/m_alsals_misc/alsdelay
-    chown system system /sys/class/misc/m_alsals_misc/alsbatch
-    chown system system /sys/class/misc/m_alsals_misc/alsflush
-    /*dixiaobing@wind-mobi.com 20150629 end*/
     chown system system /sys/class/misc/m_alsps_misc/psactive
     chown system system /sys/class/misc/m_alsps_misc/psdelay
     chown system system /sys/class/misc/m_alsps_misc/psbatch
     chown system system /sys/class/misc/m_alsps_misc/psflush
-    #dixiaobing@wind-mobi.com 20150525 start
-    chown system system /sys/class/misc/m_alsps_misc/nonwakeupps
-    #dixiaobing@wind-mobi.com 20150525 end
- 
+
+#hedj add for step_c start    
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cactive
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cdelay
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cbatch
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cflush
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cdevnum
+    chmod 0660 /sys/class/misc/m_step_c_misc/step_cenablenodata
+    chown system system /sys/class/misc/m_step_c_misc/step_cactive
+    chown system system /sys/class/misc/m_step_c_misc/step_cdelay
+    chown system system /sys/class/misc/m_step_c_misc/step_cbatch
+    chown system system /sys/class/misc/m_step_c_misc/step_cflush
+    chown system system /sys/class/misc/m_step_c_misc/step_cdevnum
+    chown system system /sys/class/misc/m_step_c_misc/step_cenablenodata
+#hedj add for step_c end    
     chmod 0660 /sys/class/misc/m_baro_misc/baroenablenodata
     chmod 0660 /sys/class/misc/m_baro_misc/baroactive
     chmod 0660 /sys/class/misc/m_baro_misc/barodelay
@@ -358,21 +375,8 @@ on post-fs-data
     chown system system /sys/class/misc/m_baro_misc/barodelay
     chown system system /sys/class/misc/m_baro_misc/barobatch
     chown system system /sys/class/misc/m_baro_misc/baroflush
-	
-	#dixiaobing@wind-mobi.com 20150525 start
-	#ps cali
-	chown system system /sys/class/meizu/ps/ps_calibration
-	chown system system /sys/class/meizu/ps/ps_offset
-	
-	#acc cali
-	chown system system /sys/class/meizu/acc/acc_calibration
-	chown system system /sys/class/meizu/acc/acc_x_offset
-	chown system system /sys/class/meizu/acc/acc_y_offset
-	chown system system /sys/class/meizu/acc/acc_z_offset
-	#dixiaobing@wind-mobi.com 20150525 end
-    #duanzhanyang@wind-mobi.com 20150620 begin
-	chown system system /sys/devices/mx_leds/leds_mode
-	#duanzhanyang@wind-mobi.com 20150620 end
+
+
 
     #Accdet
     chown root radio /sys/devices/platform/Accdet_Driver/driver/accdet_call_state
@@ -457,6 +461,12 @@ on post-fs-data
 
     #EM eint
     chown root diag /sys/bus/platform/drivers/eint/current_eint
+    
+    # Gionee LiuQiang add for dts start
+    mkdir /data/misc/srs 0770 system system
+    chmod 0666 /data/misc/srs/srs_processing.cfg
+    chown system system /data/misc/srs/srs_processing.cfg
+    # Gionee LiuQiang add for dts end
 
     # Display
     chmod 0660 /dev/graphics/fb0
@@ -470,6 +480,12 @@ on post-fs-data
 
     chmod 0660 /dev/sw_sync
     chown system graphics /dev/sw_sync
+
+    chmod 0660 /d/disp
+    chown system graphics /d/disp
+
+    chmod 0660 /d/dispsys
+    chown system graphics /d/dispsys
 
     # EM baseband file
     chown root diag /system/bin/baseband_regdump
@@ -559,16 +575,11 @@ on post-fs-data
     chmod 0660 /dev/kd_camera_flashlight
     chmod 0660 /dev/kd_camera_hw_bus2
     chmod 0660 /dev/FM50AF
-	#liukun@wind-mobi.com 20150616 begin
-    chmod 0660 /dev/BU6429AF
-	chmod 0660 /dev/BU6429116109AF
-	chmod 0660 /dev/BU6429116134AF
-	#liukun@wind-mobi.com 20150616 end
     chmod 0660 /dev/CAM_CAL_DRV
-    #oujiacheng@wind-mobi.com 2015.6.10 begin
-	chmod 0660 /dev/BU642911501AF
-	chmod 0660 /dev/BU642911502AF
-    #oujiacheng@wind-mobi.com 2015.6.10 end
+    chmod 0660 /dev/CAM_CAL_DRV1
+    chmod 0660 /dev/CAM_CAL_DRV2
+    chmod 0660 /sys/devices/platform/battery/GN_Camera_State
+
     chown system camera /dev/camera-sysram
     chown system camera /dev/camera-isp
     chown system camera /dev/camera-fdvt
@@ -577,21 +588,11 @@ on post-fs-data
     chown system camera /dev/kd_camera_flashlight
     chown system camera /dev/kd_camera_hw_bus2
     chown system camera /dev/FM50AF
-	#liukun@wind-mobi.com 20150616 begin
-    chown system camera /dev/BU6429AF
-	chown system camera /dev/BU6429116109AF
-	chown system camera /dev/BU6429116134AF
-	#liukun@wind-mobi.com 20150616 end
     chown system camera /dev/CAM_CAL_DRV
-    #oujiacheng@wind-mobi.com 2015.6.10 begin
-	chown system camera /dev/BU642911501AF
-	chown system camera /dev/BU642911502AF
-    #oujiacheng@wind-mobi.com 2015.6.10 end
-    #flash
-	#liukun begin
-	chmod 0644 /dev/flash_torch
-	chown media system /dev/flash_torch
-	#liukun end
+    chown system camera /dev/CAM_CAL_DRV1
+    chown system camera /dev/CAM_CAL_DRV2
+    chown system camera /sys/devices/platform/battery/GN_Camera_State
+
     #MATV
     chmod 0660 /dev/MATV
     chown system media /dev/MATV
@@ -652,18 +653,6 @@ on post-fs-data
     chmod 0660 /proc/driver/otp
     chown root system /proc/driver/otp
 
-    #autok
-    chown root system /sys/autok/debug
-    chown root system /sys/autok/param_count
-    chown root system /sys/autok/ready
-    chown root system /sys/autok/ss_corner
-    chown root system /sys/autok/suggest_vol
-    chown root system /sys/autok/stage1/2/DONE
-    chown root system /sys/autok/stage1/2/PARAMS
-    chown root system /sys/autok/stage1/2/VOLTAGE
-    chown root system /sys/autok/stage1/2/LOG
-    chown root system /sys/autok/stage2/2
-
     #sn
     chmod 0664 /sys/class/android_usb/android0/iSerial
     chown root system /sys/class/android_usb/android0/iSerial
@@ -674,22 +663,43 @@ on post-fs-data
     chown system system /proc/secmem0
 
     # mcDriverDaemon
+ #Gionee <duanyh> <2016-1-20> modify for kph begin
+    #mkdir /data/app/mcRegistry 0770 system system
+    #mkdir /data/app/mcRegistry/TbStorage 0770 system system
+
     mkdir /data/app/mcRegistry 0775 system system
     mkdir /data/app/mcRegistry/TbStorage 0775 system system
+
+    copy  /cache/recovery/last_KPH.bin  /data/app/mcRegistry/00000000.authtokcont.backup
+    chown system system /data/app/mcRegistry/00000000.authtokcont.backup
+    chmod 0666 /data/app/mcRegistry/00000000.authtokcont.backup
+ #Gionee <duanyh> <2016-1-20> modify for kph end
+
+    #gionee mazuyu add for fpc fingerprint begin 
+    mkdir /data/fpc 0770 system system
+   # mkdir /system/priv-app/com.fingerprints.imagecollection 0664 system system
+    #gionee mazuyu add for fpc fingerprint end
 
     # AGPS
     mkdir /data/agps_supl 0771 gps system
 
     # Recycle stuffs
     exec /system/bin/rm -f /cache/.ipoh.img
-    
+
     chmod 0666 /dev/exm0
+
+	#Thermal
+	mkdir /data/.tp/ 0775 system system
 	
-	#Thermal	
-	mkdir /data/.tp/ 0775 system system 
-	
-    #create directory /data/subt for subtitle
-    mkdir /mnt/subt/ 0770 media media
+#Gionee Alex_Ma merge for amoled specific functions on20160529
+    chown system system /sys/class/leds/amoled_lcm_hbm/brightness
+    chown system system /sys/class/leds/amoled_lcm_acl/brightness
+    chown system system /sys/class/leds/amoled_lcm_aod/brightness
+    chmod 0664 /sys/class/leds/amoled_lcm_hbm/brightness
+    chmod 0664 /sys/class/leds/amoled_lcm_acl/brightness
+    chmod 0664 /sys/class/leds/amoled_lcm_aod/brightness
+#Gionee end  
+
 # End of adding by MTK drivers
 # -----------------------
 
@@ -721,6 +731,10 @@ on boot
     chown system system /sys/class/leds/green/trigger
     chown system system /sys/class/leds/blue/trigger
 
+#Gionee BSP wangguojun 20160608 add for hallkey key start
+    chown system system /sys/devices/platform/gn_hall_key/state
+#Gionee BSP wangguojun 20160608 add for hallkey key end
+
     # Permission for hibernation
     chown radio system /sys/power/tuxonice
     chown radio system /sys/power/tuxonice/do_hibernate
@@ -743,6 +757,24 @@ on boot
     chmod 0660 /proc/hps/down_threshold
     chown system system /proc/hps/up_threshold
     chmod 0660 /proc/hps/up_threshold
+
+# PPM
+    chown system system /proc/ppm/mode
+    chmod 0660 /proc/ppm/mode
+    chown system system /proc/ppm/policy/userlimit_min_cpu_freq
+    chmod 0660 /proc/ppm/policy/userlimit_min_cpu_freq
+    chown system system /proc/ppm/policy/userlimit_max_cpu_freq
+    chmod 0660 /proc/ppm/policy/userlimit_max_cpu_freq
+    chown system system /proc/ppm/policy/userlimit_min_cpu_core
+    chmod 0660 /proc/ppm/policy/userlimit_min_cpu_core
+    chown system system /proc/ppm/policy/userlimit_max_cpu_core
+    chmod 0660 /proc/ppm/policy/userlimit_max_cpu_core
+    chown system system /proc/ppm/dump_cluster_0_dvfs_table
+    chmod 0440 /proc/ppm/dump_cluster_0_dvfs_table
+    chown system system /proc/ppm/dump_cluster_1_dvfs_table
+    chmod 0440 /proc/ppm/dump_cluster_1_dvfs_table
+    chown system system /proc/ppm/root_cluster
+    chmod 0660 /proc/ppm/root_cluster
 
 # CPU freq
     chown system system /proc/cpufreq/cpufreq_limited_by_hevc
@@ -774,6 +806,105 @@ on boot
     chown root radio /proc/net/netfilter/nfnetlink_log
     chown root radio /proc/net/netfilter/nfnetlink_queue
 
+    # Gionee BSP yang_yang add for ST SensorHub begin
+    chown system system /dev/iio:device0
+    chown system system /sys/bus/iio/devices/trigger0/name
+    chown system system /sys/bus/iio/devices/iio:device0/buffer
+    chown system system /sys/bus/iio/devices/iio:device0/buffer/length
+    chown system system /sys/bus/iio/devices/iio:device0/buffer/enable
+    chown system system /sys/bus/iio/devices/iio:device0/trigger/current_trigger
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/iio/trigger/current_trigger
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/enable
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/batch
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/flush
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/mcu_mode
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/calibrator_cmd
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/calibrator_data
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/firmware_update_i2c
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/firmware_update_cmd
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/firmware_update_data
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/firmware_update_status
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/version
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/timestamp
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/sys_cmd
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/sys_msg
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/raw_data0
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/raw_data1
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/raw_data2
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/raw_data3
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/raw_data4
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/iio
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/library_version
+    chown system system /sys/class/cywee_sensorhub/sensor_hub/mag_special_data
+    chown system system /sys/bus/platform/drivers/als_ps/incall_cali
+    chown system system /sys/bus/platform/drivers/als_ps/high_threshold
+    chown system system /sys/bus/platform/drivers/als_ps/low_threshold
+    chown system system /sys/bus/platform/drivers/als_ps/pdata
+
+    chmod 0660 /sys/bus/iio/devices/trigger0/name
+    chmod 0660 /sys/bus/iio/devices/iio:device0/buffer/length
+    chmod 0660 /sys/bus/iio/devices/iio:device0/buffer/enable
+    chmod 0660 /sys/bus/iio/devices/iio:device0/trigger/current_trigger
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/iio/trigger/current_trigger
+
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/batch
+
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/calibrator_cmd
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/calibrator_data
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/raw_data0
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/raw_data1
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/raw_data2
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/raw_data3
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/raw_data4
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/sys_cmd
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/sys_msg
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/enable
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/firmware_update_cmd
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/firmware_update_data
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/firmware_update_i2c
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/firmware_update_status
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/flush
+    chmod 0660 /sys/class/cywee_sensorhub/sensor_hub/iio
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/mcu_mode
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/timestamp
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/library_version
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/mag_special_data
+    chmod 0664 /sys/class/cywee_sensorhub/sensor_hub/version
+    chmod 0660 /sys/bus/platform/drivers/als_ps/incall_cali
+    chmod 0664 /sys/bus/platform/drivers/als_ps/high_threshold
+    chmod 0664 /sys/bus/platform/drivers/als_ps/low_threshold
+    chmod 0664 /sys/bus/platform/drivers/als_ps/pdata
+
+    mkdir /data/misc/cywee 0770 system system
+    # Gionee BSP yang_yang add for ST SensorHub end
+ 
+    #gionee mazuyu add for fpc fingerprint TEE begin    
+    chown system system /sys/bus/platform/devices/fpc_interrupt/irq
+    chown system system /sys/bus/platform/devices/fpc_interrupt/clk_enable
+    chown system system /sys/bus/platform/devices/fpc_interrupt/do_wakeup
+    chown system system /sys/bus/platform/devices/fpc_interrupt/wakeup_enable
+    chown system system /sys/bus/platform/devices/fpc_interrupt/wake_lock	
+    chown system system /sys/bus/platform/devices/fpc_interrupt/hw_reset
+    chown system system /sys/bus/platform/devices/fpc_interrupt/screen_state
+    
+    chmod 0660 /sys/bus/platform/devices/fpc_interrupt/irq
+    chmod 0660 /sys/bus/platform/devices/fpc_interrupt/clk_enable
+    chmod 0660 /sys/bus/platform/devices/fpc_interrupt/do_wakeup
+    chmod 0660 /sys/bus/platform/devices/fpc_interrupt/wakeup_enable
+    chmod 0660 /sys/bus/platform/devices/fpc_interrupt/wake_lock
+    chmod 0660 /sys/bus/platform/devices/fpc_interrupt/hw_reset
+    chmod 0666 /proc/ppm/policy/ut_fix_core_num
+    chmod 0666 /proc/ppm/policy/ut_fix_freq_idx
+    chmod 0660 /sys/bus/platform/devices/fpc_interrupt/screen_state
+    #gionee mazuyu add for fpc fingerprint TEE end
+
+# Gionee gongdb add for CTP start
+    chown system system /sys/bus/platform/devices/tp_wake_switch/double_wake
+    chown system system /sys/bus/platform/devices/tp_wake_switch/factory_check
+    chown system system /sys/bus/platform/devices/tp_wake_switch/factory_check_value
+    chown system system /sys/bus/platform/devices/tp_wake_switch/glove_enable
+# Gionee gongdb add for CTP end
+    
 # WMT proc
     chown shell system /proc/driver/wmt_dbg
     chown shell system /proc/driver/wmt_aee
@@ -1534,6 +1665,10 @@ chmod 4755 /system/bin/pppd
 chown root /system/bin/chat
 chmod 4755 /system/bin/chat
 
+#wangguojun add for remoteir
+chmod 660 /dev/remote_ctrl_dev
+chown system system /dev/remote_ctrl_dev
+
 #
 #ril-daemon (begin)
 #
@@ -1574,6 +1709,30 @@ service zpppd_gprs /system/bin/init.gprs-pppd
 #
 # add the service for call pppd(end)
 #
+
+#gionee mazuyu add for  fingerprint begin 
+#both fpc and goodix needed
+#service fingerprintd /system/bin/fingerprintd
+#          class late_start
+#          user system 
+#          group system
+
+# goodix fingerprint
+on fs
+    chown system system /dev/goodix_fp
+
+service goodixfpd /system/bin/goodixfingerprintd
+    class main
+    user system
+    group system
+
+service fingerprintd /system/bin/fingerprintd
+    class main
+    user system
+    group system
+# goodix fingerprint end
+
+#gionee mazuyu add for fingerprint  end
 
 service sbchk /system/bin/sbchk
     class core
