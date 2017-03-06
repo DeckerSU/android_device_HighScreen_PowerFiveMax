@@ -1,0 +1,3 @@
+lib64/libaudiopolicymanager.so
+lib64/libaudiopolicymanagerdefault.so
+bin/audiocmdservice_atci

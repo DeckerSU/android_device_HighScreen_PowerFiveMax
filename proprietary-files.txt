@@ -161,7 +161,7 @@ lib{,64}/hw/gralloc.default.so
 lib{,64}/hw/mmsdk.default.so
 lib{,64}/hw/keystore.default.so
 lib{,64}/hw/hwcomposer.mt6755.so
-#lib{,64}/hw/gps.mt6755.so
+lib{,64}/hw/gps.mt6755.so
 lib{,64}/hw/audio.primary.mt6755.so
 lib{,64}/hw/vibrator.default.so
 lib{,64}/hw/gralloc.mt6755.so
