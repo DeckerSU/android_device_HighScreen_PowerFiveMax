@@ -14,7 +14,7 @@ debug.hwui.render_dirty_regions=false \
 ro.sf.lcd_density=480 \
 persist.radio.multisim.config=dsds \
 ro.mtk_lte_support=1 \
-ro.telephony.ril_class=MT6755 \
+ro.telephony.ril_class=MT6735 \
 ro.telephony.ril.config=fakeiccid \
 ro.telephony.sim.count=2 \
 persist.gemini.sim_num=2 \
@@ -235,7 +235,7 @@ $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 ## Statistics
 PRODUCT_PROPERTY_OVERRIDES += \
   ro.romstats.name=LineageOS \
-  ro.romstats.version=14.0_64_bit \
+  ro.romstats.version=13.0_64_bit \
   ro.romstats.tframe=7 
 PRODUCT_PACKAGES += \
 	RomStats
