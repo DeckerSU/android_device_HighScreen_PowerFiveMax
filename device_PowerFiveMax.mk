@@ -11,7 +11,7 @@ persist.service.acm.enable=0 \
 persist.sys.usb.config=mtp \
 ro.mount.fs=EXT4 \
 debug.hwui.render_dirty_regions=false \
-ro.sf.lcd_density=320 \
+ro.sf.lcd_density=480 \
 persist.radio.multisim.config=dsds \
 ro.mtk_lte_support=1 \
 ro.telephony.ril_class=MT6755 \
@@ -244,3 +244,9 @@ PRODUCT_PACKAGES += \
 ## CM Apps
 PRODUCT_PACKAGES += \
 	CMFileManager
+
+# Fingerprint
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.fingerprint.xml:system/etc/permissions/android.hardware.fingerprint.xml
+PRODUCT_PACKAGES += \
+    fingerprintd 

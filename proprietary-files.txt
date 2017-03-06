@@ -356,6 +356,13 @@ lib{,64}/libarcsoft_nighthawk.so
 lib{,64}/libarcsoft_picauto.so
 lib{,64}/libarcsoft_piczoom.so
 lib{,64}/libamipengine.so
+lib{,64}/libimage_defog.so
+lib{,64}/libVDSingleHDRAPI.so
+lib{,64}/libVDSuperPhotoAPI.so
+lib{,64}/libVDSuperPhotoRT.so
+lib{,64}/libVDSuperPhotoRT-GLESv3.so
+lib{,64}/libmpbase.so
+
 
 bin/mcDriverDaemon
 lib{,64}/libMcClient.so
