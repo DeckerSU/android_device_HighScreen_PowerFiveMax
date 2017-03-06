@@ -43,3 +43,11 @@ service mobicore /system/bin/mcDriverDaemon -r /system/app/mcRegistry/020f000000
     group system
     class core
     oneshot
+    disabled
+    seclabel u:object_r:mobicore_exec:s0
+#   seclabel u:object_r:init_exec:s0
+
+on property:ro.crypto.state=encrypted
+    write /proc/bootprof "start mobicore (on property:ro.crypto.state=encrypted)"
+    start mobicore
+
