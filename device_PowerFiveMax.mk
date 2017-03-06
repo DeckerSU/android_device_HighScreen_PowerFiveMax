@@ -14,7 +14,7 @@ debug.hwui.render_dirty_regions=false \
 ro.sf.lcd_density=480 \
 persist.radio.multisim.config=dsds \
 ro.mtk_lte_support=1 \
-ro.telephony.ril_class=MT6735 \
+ro.telephony.ril_class=MT6755 \
 ro.telephony.ril.config=fakeiccid \
 ro.telephony.sim.count=2 \
 persist.gemini.sim_num=2 \
@@ -330,3 +330,14 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/audio/audio_device.xml:system/etc/audio_device.xml \
     $(LOCAL_PATH)/audio/audio_em.xml:system/etc/audio_em.xml
+
+PRODUCT_PACKAGES += \
+    audio.a2dp.default \
+    audio.usb.default \
+    audio.r_submix.default \
+    audio_policy.default \
+    libaudio-resampler \
+    libaudiopolicymanagerdefault \
+    libtinycompress \
+    libtinyxml \
+    tinymix
