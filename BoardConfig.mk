@@ -175,7 +175,7 @@ BOARD_SEPOLICY_DIRS := \
        device/HighScreen/PowerFiveMax/sepolicy
 
 # Use old sepolicy version
-POLICYVERS := 29
+# POLICYVERS := 29
 
 # [+] Decker
 BLOCK_BASED_OTA := false

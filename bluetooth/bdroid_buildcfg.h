@@ -19,6 +19,6 @@
 
 #define BTA_DISABLE_DELAY 1000 /* in milliseconds */
 
-#define BTM_DEF_LOCAL_NAME   "Smart Surf2 4G"
+#define BTM_DEF_LOCAL_NAME   "Highscreen Power Five Max"
 
 #endif
