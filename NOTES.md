@@ -65,12 +65,47 @@ _ZN7android22AudioMTKGainController17SetHeadPhoneLGainEi - android::AudioMTKGain
 * libgf_hal.so
 * libgoodixfingerprintd_binder.so
 * goodixfingerprintd (/system/bin)
+* libMcClient.so
+* libMcRegistry.so
+* libMcGatekeeper.so
+
+
+Лог:
 
 	03-07 03:37:27.047   435   435 V fingerprintd: nativeOpenHal()
 	03-07 03:37:27.048   435   435 D fpc_fingerprint_hal: fpc_module_open
 	03-07 03:37:27.048   435   435 D fpc_fingerprint_hal: gn_fpc_hw_reset
 	03-07 03:37:27.048   435   435 E fpc_tac : gn_sysfs_node_write open: /sys/devices/fpc_interrupt/hw_reset failed, No such file or directory
 	03-07 03:37:27.069   435   435 D fpc_tac : 'modalias'='of:Nfpc_interruptT<NULL>Cmediat' found on  path '/sys/bus/platform/devices/fpc_interrupt/'
+	
+Кстати, еще одна особенность, если по каким-то причинам бинарник от Goodix не может запустится, например так:
+
+	/system/bin/goodixfingerprintd: can't execute: Permission denied
+
+То в logcat'е этого к сожалению не видно, т.е. вместо того что сервис пытается запускаться, мы видим:
+
+	03-07 12:18:15.319     1     1 E (6)[1:init]init: Service goodixfpd does not have a SELinux domain defined.
+	03-07 12:18:15.319     1     1 I (6)[1:init]init: Starting service 'fingerprintd'...
+
+Поэтому его нужно как минимум объявить в domain.te ...
+
+ro.boot.fpsensor: gdx
+persist.sys.fp.goodix 
+
+	[init.svc.goodixfpd]: [running]
+	[persist.sys.fp_vendor]: [goodix]
+	[ro.gn.fp.tee.support]: [no]
+	[ro.gn.gesture.vendor]: [goodix]
+
+--
+
+	03-07 14:14:53.515   431   431 I goodixfingerprintd: Starting goodixfingerprintd
+	03-07 14:14:53.515   431   431 I goodixfingerprintd: goodixfingerprintd set_goodix_flag enter.
+	03-07 14:14:53.515   431   431 I goodixfingerprintd: goodixfingerprintd check device for compatible other finger print vendor 
+	03-07 14:14:53.515   431   431 I goodixfingerprintd: goodixfingerprintd success to open device (/dev/goodix_fp) 
+
+libhardware? persist.sys.fp_vendor совместимость ...
+
 
 
 ### Remote IR

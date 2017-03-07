@@ -133,17 +133,27 @@
 /(system\/vendor|vendor)/bin/mcDriverDaemon u:object_r:mobicore_exec:s0
 /(system\/vendor|vendor)/app/mcRegistry(/.*)? u:object_r:mobicore_data_file:s0
 
-# Goodix 
-/dev/goodix_fp                 u:object_r:goodixfingerprintd_device:s0                  
-/system/lib64/libgf_hal.so u:object_r:goodixfingerprintd_lib_file:s0                    
-/system/lib64/libgf_ca.so  u:object_r:goodixfingerprintd_lib_file:s0                    
-/system/lib/libgf_ca.so  u:object_r:goodixfingerprintd_lib_file:s0                      
-/system/lib64/libgf_algo.so  u:object_r:goodixfingerprintd_lib_file:s0                  
-/system/lib/libgf_algo.so  u:object_r:goodixfingerprintd_lib_file:s0                    
-/system/lib/libgf_hal.so   u:object_r:goodixfingerprintd_lib_file:s0                    
+# Device files
+/dev/goodix_fp                 u:object_r:goodixfingerprintd_device:s0
+# Goodix librarires
+/system/lib64/libMcClient.so  u:object_r:mobicore_lib_file:s0
+/system/lib/libMcClient.so  u:object_r:mobicore_lib_file:s0
+/system/lib64/libMcRegistry.so  u:object_r:mobicore_lib_file:s0
+/system/lib/libMcRegistry.so  u:object_r:mobicore_lib_file:s0
+/system/lib/hw/libMcGatekeeper.so u:object_r:mobicore_lib_file:s0
+/system/lib64/hw/libMcGatekeeper.so u:object_r:mobicore_lib_file:s0
+/system/lib64/libgf_hal.so u:object_r:goodixfingerprintd_lib_file:s0
+/system/lib64/libgf_ca.so  u:object_r:goodixfingerprintd_lib_file:s0
+/system/lib/libgf_ca.so  u:object_r:goodixfingerprintd_lib_file:s0
+/system/lib64/libgf_algo.so  u:object_r:goodixfingerprintd_lib_file:s0
+/system/lib/libgf_algo.so  u:object_r:goodixfingerprintd_lib_file:s0
+/system/lib/libgf_hal.so   u:object_r:goodixfingerprintd_lib_file:s0
 /system/lib64/libgoodixfingerprintd_binder.so  u:object_r:goodixfingerprintd_lib_file:s0
-/system/lib/libgoodixfingerprintd_binder.so  u:object_r:goodixfingerprintd_lib_file:s0  
-/data/system/fingerprint(/.*)?    u:object_r:goodixfingerprintd_data_file:s0            
-/persist/data/gxfp(/.*)?                  u:object_r:goodixfingerprintd_data_file:s0    
-/system/bin/goodixfingerprintd u:object_r:goodixfingerprintd_exec:s0                    
+/system/lib/libgoodixfingerprintd_binder.so  u:object_r:goodixfingerprintd_lib_file:s0
+
+/data/system/fingerprint(/.*)?    u:object_r:goodixfingerprintd_data_file:s0
+/persist/data/gxfp(/.*)?		  u:object_r:goodixfingerprintd_data_file:s0
+
+# Executable binary of goodix
+/system/bin/goodixfingerprintd u:object_r:goodixfingerprintd_exec:s0
 

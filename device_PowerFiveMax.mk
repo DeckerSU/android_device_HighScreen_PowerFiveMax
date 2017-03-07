@@ -342,3 +342,6 @@ PRODUCT_PACKAGES += \
     libtinycompress \
     libtinyxml \
     tinymix
+
+PRODUCT_PACKAGES += \
+    GFManager
