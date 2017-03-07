@@ -1,2 +1,5 @@
 type pq_service, service_manager_type;
 type guiext-server_service, service_manager_type;
+type goodixfingerprintd_service, app_api_service, system_server_service, service_manager_type;
+type goodix_fingerprint_service, app_api_service, system_server_service, service_manager_type;
+type goodix_service, service_manager_type;
