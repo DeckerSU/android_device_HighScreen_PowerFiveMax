@@ -106,7 +106,146 @@ persist.sys.fp.goodix
 
 libhardware? persist.sys.fp_vendor совместимость ...
 
+libhardware.so -> hardware/libhardware/hardware.c  -> hw_get_module_by_class - модифицированная процедура.
 
+**libhardware.so**
+
+	 off_3E08        DCD aPersist_sys_fp     ; DATA XREF: hw_get_module_by_class+B6o
+	.data.rel.ro.local:00003E08                                         ; .text:off_BC4o
+	.data.rel.ro.local:00003E08                                         ; "persist.sys.fp_vendor"
+	.data.rel.ro.local:00003E0C                 DCD aRo_hardware        ; "ro.hardware"
+	.data.rel.ro.local:00003E10                 DCD aRo_product_boa     ; "ro.product.board"
+	.data.rel.ro.local:00003E14                 DCD aRo_board_platf     ; "ro.board.platform"
+	.data.rel.ro.local:00003E18                 DCD aRo_arch            ; "ro.arch"
+	.data.rel.ro.local:00003E1C                 DCD aRo_btstack         ; "ro.btstack"
+	
+Процедура:	
+
+	int __fastcall hw_get_module_by_class(const char *a1, int a2, int a3)
+	{
+	  int v3; // r7@1
+	  int v4; // r11@1
+	  const char *v5; // r9@1
+	  int v6; // r10@5
+	  void *v7; // r0@7
+	  void *v8; // r8@7
+	  int result; // r0@14
+	  char *v10; // r0@8
+	  void *v11; // r0@18
+	  void *v12; // r5@18
+	  char s; // [sp+Ch] [bp-402Ch]@1
+	  int v14; // [sp+100Ch] [bp-302Ch]@1
+	  int v15; // [sp+200Ch] [bp-202Ch]@1
+	  int v16; // [sp+300Ch] [bp-102Ch]@1
+	  int v17; // [sp+400Ch] [bp-2Ch]@1
+	
+	  v3 = a3;
+	  v4 = a2;
+	  v5 = a1;
+	  v17 = _stack_chk_guard;
+	  memset(&s, 0, 0x1000u);
+	  memset(&v14, 0, 0x1000u);
+	  memset(&v15, 0, 0x1000u);
+	  memset(&v16, 0, 0x1000u);
+	  if ( v4 )
+	    snprintf((char *)&v15, 0x1000u, "%s.%s", v5, v4);
+	  else
+	    strlcpy(&v15, v5, 4096);
+	  snprintf((char *)&v16, 0x1000u, "ro.hardware.%s", &v15);
+	  if ( property_get(&v16, &s, 0) <= 0 || sub_9B4(&v14, &v15, &s) )
+	  {
+	    v6 = 0;
+	    while ( !property_get(off_3E08[v6], &s, 0) || sub_9B4(&v14, &v15, &s) )
+	    {
+	      ++v6;
+	      if ( v6 == 6 )
+	      {
+	        if ( !sub_9B4(&v14, &v15, "default") )
+	          break;
+	        result = -2;
+	        goto LABEL_24;
+	      }
+	    }
+	  }
+	  v7 = dlopen((const char *)&v14, 0);
+	  v8 = v7;
+	  if ( !v7 )
+	  {
+	    v10 = dlerror();
+	    if ( !v10 )
+	      v10 = "unknown";
+	    _android_log_print(6, "HAL", "load: module=%s\n%s", &v14, v10);
+	    goto LABEL_27;
+	  }
+	  v11 = dlsym(v7, "HMI");
+	  v12 = v11;
+	  if ( !v11 )
+	  {
+	    _android_log_print(6, "HAL", "load: couldn't find symbol %s", "HMI");
+	LABEL_26:
+	    dlclose(v8);
+	LABEL_27:
+	    result = -22;
+	    v12 = 0;
+	    goto LABEL_23;
+	  }
+	  result = strcmp(v5, *((const char **)v11 + 2));
+	  if ( result )
+	  {
+	    ((void (__fastcall *)(signed int, char *, _DWORD, const char *))_android_log_print)(
+	      6,
+	      "HAL",
+	      "load: id=%s != hmi->id=%s",
+	      v5);
+	    goto LABEL_26;
+	  }
+	  *((_DWORD *)v12 + 6) = v8;
+	LABEL_23:
+	  *(_DWORD *)v3 = v12;
+	LABEL_24:
+	  if ( v17 != _stack_chk_guard )
+	    _stack_chk_fail(result);
+	  return result;
+	}
+
+https://forum.xda-developers.com/showpost.php?p=70000911&postcount=2248
+
+Вроде удалось завести сканер, но, приложение settings падает (точно такая же ситуация по ссылке выше):
+
+	
+	03-07 18:09:43.197  3503  3503 D AndroidRuntime: Shutting down VM
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: FATAL EXCEPTION: main
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: Process: com.android.settings, PID: 3503
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: java.lang.NullPointerException: Attempt to write to field 'int android.app.Fragment.mNextAnim' on a null object reference
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at android.app.BackStackRecord.run(BackStackRecord.java:780)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at android.app.FragmentManagerImpl.execPendingActions(FragmentManager.java:1578)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at android.app.FragmentManagerImpl$1.run(FragmentManager.java:483)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:751)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:95)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:154)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:6126)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:886)
+	03-07 18:09:43.199  3503  3503 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:776)
+	03-07 18:09:43.200   860  2059 I am_crash: [3503,0,com.android.settings,952647237,java.lang.NullPointerException,Attempt to write to field 'int android.app.Fragment.mNextAnim' on a null object reference,BackStackRecord.java,780]
+
+Вообщем вот так у нас:
+
+	03-07 18:10:15.300   860  2846 I ActivityManager: START u0 {cmp=com.android.settings/.fingerprint.FingerprintEnrollEnrolling (has extras)} from uid 1000 on display 0
+		03-07 18:10:15.305   860  2846 I wm_task_moved: [9,1,0]
+		03-07 18:10:15.306   860  2846 I am_create_activity: [0,69785865,9,com.android.settings/.fingerprint.FingerprintEnrollEnrolling,NULL,NULL,NULL,0]
+		03-07 18:10:15.307   860  2846 I wm_task_moved: [9,1,0]
+		03-07 18:10:15.309   860  2846 I am_focused_activity: [0,com.android.settings/.fingerprint.FingerprintEnrollEnrolling,startedActivity]
+		03-07 18:10:15.309   860  2846 I am_pause_activity: [0,13670308,com.android.settings/.fingerprint.FingerprintEnrollEnrolling]
+		
+
+А вот так на стоке:
+
+	03-07 13:52:47.952  1304  1809 I ActivityManager: START u0 {cmp=com.android.settings/.fingerprint.GnFingerprintEnrollEnrolling (has extras)} from uid 1000 from pid 5102 on display 0
+	03-07 13:52:47.952  1304  1809 I am_home_stack_moved: [0,0,1,1,sourceStackToFront]
+	03-07 13:52:47.953  1304  1809 I wm_task_moved: [40,1,0]
+	03-07 13:52:47.954  1304  1809 I am_create_activity: [0,248188251,40,com.android.settings/.fingerprint.GnFingerprintEnrollEnrolling,NULL,NULL,NULL,0]
+	
 
 ### Remote IR
 

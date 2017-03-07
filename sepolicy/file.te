@@ -28,6 +28,9 @@ type sysfs_fingerprintd, fs_type, sysfs_type;
 # Fingerprint: 
 type sysfs_goodixfingerprintd, fs_type, sysfs_type;
 
+# fingerprint data file
+# type fingerprintd_data_file, file_type, data_file_type;
+
 # goodix data file
 type goodixfingerprintd_data_file, file_type, data_file_type;
 

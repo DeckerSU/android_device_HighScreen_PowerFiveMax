@@ -344,4 +344,5 @@ PRODUCT_PACKAGES += \
     tinymix
 
 PRODUCT_PACKAGES += \
-    GFManager
+    GFManager \
+    FingerprintServiceExtension
