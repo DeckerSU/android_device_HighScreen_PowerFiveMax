@@ -210,7 +210,8 @@ PRODUCT_PACKAGES += \
 
 # 3rd-party apps
 PRODUCT_PACKAGES += \
-	Telegram+3.16.1
+	Telegram+3.16.1 \
+	Peel
 
 
 #Hack for prebuilt kernel
