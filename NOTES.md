@@ -52,5 +52,36 @@ _ZN7android22AudioMTKGainController17SetHeadPhoneLGainEi - android::AudioMTKGain
 
 Да, кстати, добавленный android.hardware.consumerir.xml без модуля может повесить загрузку всей системы в целом, даже без каких либо ошибок в logcat'е (!). Поэтому **если у вас что-то не загружается удалите лишние разрешения из /etc/permissions на всякий случай**.
 
+###Fingerprint
+
+* fingerprint.goodix.so
+* fingerprint.mt6755.so
+
+--
+
+* lib_fpc_tac_shared.so
+* libgf_algo.so
+* libgf_ca.so
+* libgf_hal.so
+* libgoodixfingerprintd_binder.so
+* goodixfingerprintd (/system/bin)
+
+	03-07 03:37:27.047   435   435 V fingerprintd: nativeOpenHal()
+	03-07 03:37:27.048   435   435 D fpc_fingerprint_hal: fpc_module_open
+	03-07 03:37:27.048   435   435 D fpc_fingerprint_hal: gn_fpc_hw_reset
+	03-07 03:37:27.048   435   435 E fpc_tac : gn_sysfs_node_write open: /sys/devices/fpc_interrupt/hw_reset failed, No such file or directory
+	03-07 03:37:27.069   435   435 D fpc_tac : 'modalias'='of:Nfpc_interruptT<NULL>Cmediat' found on  path '/sys/bus/platform/devices/fpc_interrupt/'
+
+
+### Remote IR
+
+remote_ctrl -> **/dev/remote_ctrl**
+
+* system/lib64/hw/consumerir.default.so
+* system/lib64/libsmartir_v_2_0_1.so (это по идее от приложения Peel, правда где оно там используется понять так и не удалось)
+* system/bin/meta_tst (не забыть про запуск в init'ах)
+* system/app/Peel/Peel.apk
+* system/lib64/hw/remoteir.default.so
+* system/lib/hw/remoteir.default.so
 
 
