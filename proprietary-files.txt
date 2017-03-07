@@ -57,7 +57,7 @@ bin/wifi2agps
 bin/memsicd
 bin/ccci_fsd
 bin/s62xd
-lib{,64}/libtinycompress.so
+#lib{,64}/libtinycompress.so
 lib{,64}/libMtkOmxFlacDec.so
 lib{,64}/libcam.camadapter.so
 lib{,64}/libcameracustom.so
@@ -119,7 +119,7 @@ lib{,64}/libcam3_utils.so
 lib{,64}/libdrmmtkutil.so
 lib{,64}/libspeech_enh_lib.so
 lib{,64}/libmatv_cust.so
-lib{,64}/libtinyxml.so
+#lib{,64}/libtinyxml.so
 lib{,64}/libcam.utils.cpuctrl.so
 lib{,64}/libfile_op.so
 lib{,64}/libcam.metadata.so
@@ -146,7 +146,7 @@ lib{,64}/libshowlogo.so
 lib{,64}/libMtkOmxCore.so
 lib{,64}/libvp8enc_sa.ca7.so
 lib{,64}/libmhalImageCodec.so
-lib{,64}/libaudio-resampler.so
+#lib{,64}/libaudio-resampler.so
 lib{,64}/libaudiocustparam.so
 lib{,64}/libvcodec_utility.so
 lib{,64}/libaed.so
@@ -328,7 +328,7 @@ lib{,64}/libimageio_plat_drv_FrmB.so
 lib{,64}/libcam.iopipe_FrmB.so
 lib{,64}/libfmcust.so
 
-lib{,64}/hw/audio.a2dp.default.so
+#lib{,64}/hw/audio.a2dp.default.so
 lib{,64}/hw/audio_policy.stub.so
 lib{,64}/hw/lights.mt6755.so
 lib{,64}/hw/radio.fm.mt6755.so
@@ -422,3 +422,4 @@ app/mcRegistry/9073f03a9618383bb1856eb3f990babd.tlbin
 app/mcRegistry/98fb95bcb4bf42d26473eae48690d7ea.tlbin
 app/mcRegistry/e97c270ea5c44c58bcd3384a2fa2539e.tlbin
 
+bin/audiocmdservice_atci

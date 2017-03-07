@@ -28,4 +28,29 @@ _ZN7android22AudioMTKGainController17SetHeadPhoneLGainEi - android::AudioMTKGain
 	// void _ZN7android22AudioMTKGainController12ApplyMicGainE13GAIN_MIC_MODE11GAIN_DEVICE12audio_mode_t(uint32_t MicType, int mode) {}
 
 	
-Но это чревато отсутствием записи с микрофона и еще некоторыми вещами ...
+Но это чревато отсутствием записи с микрофона и еще некоторыми
+
+ вещами ...
+ 
+** p.s.** Корень проблемы кроется в **etc/audio_param** и файлах audio* в etc, в частности:
+
+* audio_device.xml
+* audio_em.xml
+* audio_policy.conf
+
+На MT6735 таких файлов не было (!) ... а вот на MT6755 уже появились ... и они являются неотъемлемой частью подсистемы Audio.
+ 
+### Проблема с Zygote
+
+На CM13 столкнулся с падением Zygote ... Zygote BOOT FAILURE making display ready и что-то там про null exception. Вообщем проблема не стоила выеденного яйца, чуть выше в логе было:
+
+	03-07 02:21:12.161   853   853 I SystemServer: Consumer IR Service
+	03-07 02:21:12.162   853   853 E ConsumerIrService: Can't open consumer IR HW Module, error: -2
+	
+
+Все оказалось из-за того что присутствует файл /etc/permissions/android.hardware.consumerir.xml , а IR HW Module'я нет. Достаточно было удалить android.hardware.consumerir.xml , пока не решились проблемы с модулем и прошивка загрузилась.
+
+Да, кстати, добавленный android.hardware.consumerir.xml без модуля может повесить загрузку всей системы в целом, даже без каких либо ошибок в logcat'е (!). Поэтому **если у вас что-то не загружается удалите лишние разрешения из /etc/permissions на всякий случай**.
+
+
+
