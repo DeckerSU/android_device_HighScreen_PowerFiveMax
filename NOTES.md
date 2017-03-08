@@ -256,19 +256,52 @@ make -j9 libgoodixfingerprintd_binder
 
 **Окончательное решение проблемы** с Fingerprint'ом состоит в следующем:
 
+* Как мы выяснили ранее, для работы сканера отпечатков от Goodix необходимы, как минимум fingerprint.goodix.so (на самом деле fingerprint.mt6755.so) в /lib{,64}/hw, либы libgf_algo.so, libgf_ca.so, libgf_hal.so и бинарник goodixfingerprintd и либа libgoodixfingerprintd_binder.so от него. Плюс все что касается mobicore, т.е. у вас должно работать mobicore'овское шифрование и т.п. Без него сканер вряд-ли заработает. 
 * Для того чтобы сканирование отпечатка не падало в Settings нужен symlink - gatekeeper.mt6755.so -> libMcGatekeeper.so, он есть в system.img в оригинальной прошивке. Также, т.к. HAL'ом fingerprint'а является BLOB fingerprint.goodix.so, делаем symlink - fingerprint.mt6755.so -> fingerprint.goodix.so . fingerprint.mt6755.so, который есть на стоке для FPC, а не для Goodix и здесь не используется. Более того Gionee внесли изменения в libhardware, чтобы определять какой датчик используется и загружать соответствующий модуль. Поэтому на стоковой прошивке при наличии установленного флага persist.sys.fp_vendor = goodix (сам флаг устанавливается в goodixfingerprintd) libhardware подгружал модуль fingerprint.goodix.so. Т.к. наш libhardware полностью стоковый, а другого сканера у нас все равно нет, то гораздо проще сделать symlink в system.img для  fingerprint.mt6755.so -> fingerprint.goodix.so.
-* Без соответствующих разрешающих sepolicy для **mobicore_data_file** в installd.te и kernel.te правила для создания необходимых папок в init'ах, в частности вот эти:
+* Без соответствующих разрешающих sepolicy для mobicore_data_file в installd.te и kernel.te правила для создания необходимых папок в init'ах, в частности вот эти:
 
 	    mkdir /data/app/mcRegistry 0775 system system
 	    mkdir /data/app/mcRegistry/TbStorage 0775 system system
 	
 Не срабатывали, в результате при загрузке системы папка mcRegistry и 	mcRegistry/TbStorage в /data/app просто отсутствовали и отсканированные отпечатки при всем желании не могли сохраниться в базу. Т.к. необходимого пути  /data/app/mcRegistry физически не существовало.
-* Такое же разрешение для mobicore_data_file:dir я добавил и в init.te, т.е.:
 
-	allow init mobicore_data_file:dir { r_file_perms write remove_name rmdir };
+* Также необходим патч PackageManager о котором рассказано ниже, чтобы при загрузке ОС он не удалял папку /data/app/mcRegistry
+* Еще раз обращаю ваше внимание что libMcGatekeeper.so, который в нашем телефоне находится в hw, это не что иное как gatekeeper.mt6755.so, без него Settings (настройки) после сканирования отпечатка будет падать. Возможно в других девайсах есть gatekeeper.mt6755.so, но здесь мы создаем его именно symlink'ом в разделе system. Причем на этапе подготовки system.img, симлинками в init'е, т.е. в init.rc и т.п. его создать нельзя, т.к. раздел system монтируется только для чтения.
 
-Плюс еще одна странность ... в момент инициализации прошивки папка  /data/app/mcRegistry/ есть, но уже после ее инициализации, когда появился экран первоначальной настройки она почему-то отсутствует. Видимо что-то ее удаляет.
+Описание патча:
 
+Плюс еще одна странность ... в момент инициализации прошивки папка  /data/app/mcRegistry/ есть, но уже после ее инициализации, когда появился экран первоначальной настройки она почему-то отсутствует. Видимо что-то ее удаляет:
+
+	03-08 22:34:34.110   633   633 W PackageManager: Destroying /data/app/mcRegistry due to: android.content.pm.PackageParser$PackageParserException: Missing base APK in /data/app/mcRegistry
+	03-08 22:34:34.110   633   633 I pm_critical_info: Destroying /data/app/mcRegistry due to: android.content.pm.PackageParser$PackageParserException: Missing base APK in /data/app/mcRegistry
+	
+Это идет здесь frameworks/base/services/core/java/com/android/server/pm/PackageManagerService.java :
+
+            try {
+                final PackageLite pkg = PackageParser.parsePackageLite(file,
+                        PackageParser.PARSE_MUST_BE_APK);
+                assertPackageKnown(volumeUuid, pkg.packageName);
+
+            } catch (PackageParserException | PackageManagerException e) {
+                logCriticalInfo(Log.WARN, "Destroying " + file + " due to: " + e);
+                synchronized (mInstallLock) {
+                    removeCodePathLI(file);
+                }
+            }
+
+Соответствующий патч есть в дереве - 0013-PackageManager-don-t-delete-data-app-mcRegistry-fold.patch , собственно применена следующая мофикация PackageManager'а:
+
+            } catch (PackageParserException | PackageManagerException e) {
+		if (file.getAbsolutePath().equals("/data/app/mcRegistry")) {
+		logCriticalInfo(Log.WARN, "[Decker] We keep " + file.getAbsolutePath() + " due to store fingerprints.");
+		} else {
+                logCriticalInfo(Log.WARN, "Destroying " + file + " due to: " + e);
+                synchronized (mInstallLock) {
+                    removeCodePathLI(file);
+                }}
+            }
+
+Если вы все это прочитали и данная информация помогла вам завести Goodix'овский сканер - [поддержите проект](http://donate.decker.su/) , т.к. на понимание всего этого в прямом смысле ушли несколько суток работы.
 
 ### Remote IR
 
