@@ -246,6 +246,14 @@ https://forum.xda-developers.com/showpost.php?p=70000911&postcount=2248
 	03-07 13:52:47.953  1304  1809 I wm_task_moved: [40,1,0]
 	03-07 13:52:47.954  1304  1809 I am_create_activity: [0,248188251,40,com.android.settings/.fingerprint.GnFingerprintEnrollEnrolling,NULL,NULL,NULL,0]
 	
+make -j9 fingerprint.mt6755
+make -j9 libgf_hal 
+make -j9 libgf_algo 
+make -j9 goodixfingerprintd 
+make -j9 libgoodixfingerprintd_binder
+
+**Продолжаем раскопки ... **Если в стоковой прошивке удалить AmigoSettings и даже все приложения от Amigo в /system/app, то датчик работает (!), если удалить GFManager, то датчик также работает. Если заменить в стоке fingerprint.mt6755.so на finerprint.goodix.so - то все также работает. Т.е. фактически нам нужен только finerprint.goodix.so, переименованный как mt6755, для того чтобы Android его загружал при старте.
+	
 
 ### Remote IR
 

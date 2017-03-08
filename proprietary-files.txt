@@ -439,3 +439,4 @@ lib{,64}/libgf_hal.so
 lib{,64}/libMcRegistry.so
 lib{,64}/libgoodixfingerprintd_binder.so
 bin/goodixfingerprintd
+lib{,64}/libcom_fingerprints_service.so

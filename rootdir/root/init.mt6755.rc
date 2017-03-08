@@ -1725,11 +1725,13 @@ service goodixfpd /system/bin/goodixfingerprintd
     class main
     user system
     group system
+    seclabel u:r:goodixfingerprintd:s0
 
 service fingerprintd /system/bin/fingerprintd
     class main
     user system
     group system
+    seclabel u:r:fingerprintd:s0
 # goodix fingerprint end
 
 #gionee mazuyu add for fingerprint  end

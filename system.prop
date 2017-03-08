@@ -78,8 +78,8 @@ persist.sys.display.clearMotion=0
 fmradio.driver.enable=1
 
 # Fingerprint
-#ro.gn.fingerprint.ext=yes          
-#ro.gn.fingerprint.support=yes      
-#ro.gn.privatespace.fingerprint=yes 
-#ro.gn.three.finger.guestmode=yes   
-#sys.fingerprint.sensor.type=0      
+ro.gn.fingerprint.ext=yes          
+ro.gn.fingerprint.support=yes      
+ro.gn.privatespace.fingerprint=yes 
+ro.gn.three.finger.guestmode=yes   
+sys.fingerprint.sensor.type=0      
