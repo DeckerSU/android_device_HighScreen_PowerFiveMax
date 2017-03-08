@@ -124,6 +124,14 @@ LOCAL_PATH := \$(call my-dir)
 
 \$(info [Decker] copying DP Framework proprietary blobs)
 
+# Making symlinks in system.img 
+\$(shell ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib64/hw/gatekeeper.mt6755.so; \\
+	ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib64/hw/gatekeeper.gnbj6755_66_m.so; \\
+	ln -sf fingerprint.goodix.so \$(TARGET_OUT)/lib64/hw/fingerprint.mt6755.so; \\
+	ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib/hw/gatekeeper.mt6755.so; \\
+	ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib/hw/gatekeeper.gnbj6755_66_m.so; \\
+	ln -sf fingerprint.goodix.so \$(TARGET_OUT)/lib/hw/fingerprint.mt6755.so; )
+
 #include \$(CLEAR_VARS)
 #LOCAL_MODULE := libdpframework
 #LOCAL_MODULE_OWNER := \$VENDOR
@@ -192,21 +200,21 @@ LOCAL_MODULE_PATH := \$(TARGET_OUT_VENDOR_APPS)
 #LOCAL_MODULE_PATH := \$(TARGET_OUT_DATA_APPS)
 include \$(BUILD_PREBUILT)
 
-include \$(CLEAR_VARS)
-LOCAL_MODULE := GFManager
-LOCAL_SRC_FILES := user-apps/\$(LOCAL_MODULE).apk
-LOCAL_MODULE_CLASS := APPS
-LOCAL_MODULE_SUFFIX := \$(COMMON_ANDROID_PACKAGE_SUFFIX)
-LOCAL_CERTIFICATE := platform
-LOCAL_MODULE_TAGS := optional
-include \$(BUILD_PREBUILT)
+#include \$(CLEAR_VARS)
+#LOCAL_MODULE := GFManager
+#LOCAL_SRC_FILES := user-apps/\$(LOCAL_MODULE).apk
+#LOCAL_MODULE_CLASS := APPS
+#LOCAL_MODULE_SUFFIX := \$(COMMON_ANDROID_PACKAGE_SUFFIX)
+#LOCAL_CERTIFICATE := platform
+#LOCAL_MODULE_TAGS := optional
+#include \$(BUILD_PREBUILT)
 
-include \$(CLEAR_VARS)
-LOCAL_MODULE := FingerprintServiceExtension
-LOCAL_SRC_FILES := user-apps/\$(LOCAL_MODULE).apk
-LOCAL_MODULE_CLASS := APPS
-LOCAL_MODULE_SUFFIX := \$(COMMON_ANDROID_PACKAGE_SUFFIX)
-LOCAL_CERTIFICATE := platform
-LOCAL_MODULE_TAGS := optional
-include \$(BUILD_PREBUILT)
+#include \$(CLEAR_VARS)
+#LOCAL_MODULE := FingerprintServiceExtension
+#LOCAL_SRC_FILES := user-apps/\$(LOCAL_MODULE).apk
+#LOCAL_MODULE_CLASS := APPS
+#LOCAL_MODULE_SUFFIX := \$(COMMON_ANDROID_PACKAGE_SUFFIX)
+#LOCAL_CERTIFICATE := platform
+#LOCAL_MODULE_TAGS := optional
+#include \$(BUILD_PREBUILT)
 EOF

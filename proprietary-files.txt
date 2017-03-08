@@ -430,13 +430,13 @@ bin/meta_tst
 lib{,64}/hw/remoteir.default.so
 
 lib{,64}/hw/fingerprint.goodix.so
-lib{,64}/hw/fingerprint.mt6755.so
+#lib{,64}/hw/fingerprint.mt6755.so
 lib{,64}/hw/libMcGatekeeper.so
-lib{,64}/lib_fpc_tac_shared.so
+#lib{,64}/lib_fpc_tac_shared.so
 lib{,64}/libgf_algo.so
 lib{,64}/libgf_ca.so
 lib{,64}/libgf_hal.so
 lib{,64}/libMcRegistry.so
 lib{,64}/libgoodixfingerprintd_binder.so
 bin/goodixfingerprintd
-lib{,64}/libcom_fingerprints_service.so
+#lib{,64}/libcom_fingerprints_service.so
