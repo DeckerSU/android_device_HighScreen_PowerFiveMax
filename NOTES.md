@@ -314,4 +314,41 @@ remote_ctrl -> **/dev/remote_ctrl**
 * system/lib64/hw/remoteir.default.so
 * system/lib/hw/remoteir.default.so
 
+### VP9 OMX Decoder
+
+О проблеме с декодером VP9 при просмотре видео с YouTube можно почитать [тут](https://github.com/DeckerSU/android_device_tele2_maxi_lte/blob/lineage-14.0/NOTES.md#vp9-omx-decoder)  , собственно здесь, в этой прошивке применен тот же самый (!) патч frameworks/av/media/libstagefright/**ACodec.cpp** . Только он не оформлен в виде патча. Поэтому если в приложении Youtube у вас перепутаны красный и синий цвета (Red <-> Blue) и вы видите синие лица, как в фильме Avatar ;) Примените патч вручную, на всякий случай приведу его здесь. Все видно более чем наглядно:
+
+	#define HAL_PIXEL_FORMAT_NV12_BLK 0x7F000001
+	#define HAL_PIXEL_FORMAT_I420 (0x32315659 + 0x10)
+	#define HAL_PIXEL_FORMAT_YUV_PRIVATE (0x32315659 + 0x20)
+
+и
+
+	#ifdef MTK_HARDWARE
+	void ACodec::setHalWindowColorFormat(OMX_COLOR_FORMATTYPE &eHalColorFormat) {
+	    ALOGE("[Decker] setHalWindowColorFormat(%#x) - %s",eHalColorFormat,mComponentName.c_str());
+	
+	    if (!strncmp("OMX.MTK.", mComponentName.c_str(), 8)) {
+	        switch (eHalColorFormat) {
+	            case OMX_COLOR_FormatYUV420Planar:
+	                eHalColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_I420;
+	                break;
+	            case OMX_MTK_COLOR_FormatYV12:
+	                eHalColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_YV12;
+	                break;
+	            case OMX_COLOR_FormatVendorMTKYUV:
+	                eHalColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_NV12_BLK;
+	                break;
+	            default:
+	        if (!strcasecmp(mComponentName.c_str(), "OMX.MTK.VIDEO.DECODER.VP9")) {
+	            ALOGE("[Decker] OMX.MTK.VIDEO.DECODER.VP9 detected ... change Hal Color Format ...");
+	            eHalColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_YUV_PRIVATE;
+	        } else
+	                eHalColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_I420;
+	
+	                break;
+	        }
+	    }
+	}
+	#endif
 
