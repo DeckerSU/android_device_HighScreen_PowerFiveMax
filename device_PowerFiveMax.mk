@@ -110,10 +110,13 @@ PRODUCT_COPY_FILES += \
 
 # Thermal
 PRODUCT_COPY_FILES += \
+     $(LOCAL_PATH)/configs/.thermal_policy_00:system/etc/.tp/.thermal_policy_00 \
+     $(LOCAL_PATH)/configs/.thermal_policy_01:system/etc/.tp/.thermal_policy_01 \
+     $(LOCAL_PATH)/configs/.thermal_policy_02:system/etc/.tp/.thermal_policy_02 \
+     $(LOCAL_PATH)/configs/.thermal_meta.conf:system/etc/.tp/.thermal_meta.conf \
      $(LOCAL_PATH)/configs/thermal.conf:system/etc/.tp/thermal.conf \
      $(LOCAL_PATH)/configs/thermal.off.conf:system/etc/.tp/thermal.off.conf \
-     $(LOCAL_PATH)/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc \
-     #$(LOCAL_PATH)/configs/thermalstress.cfg:system/etc/.tp/thermalstress.cfg
+     $(LOCAL_PATH)/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
