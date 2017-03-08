@@ -253,7 +253,22 @@ make -j9 goodixfingerprintd
 make -j9 libgoodixfingerprintd_binder
 
 **Продолжаем раскопки ... **Если в стоковой прошивке удалить AmigoSettings и даже все приложения от Amigo в /system/app, то датчик работает (!), если удалить GFManager, то датчик также работает. Если заменить в стоке fingerprint.mt6755.so на finerprint.goodix.so - то все также работает. Т.е. фактически нам нужен только finerprint.goodix.so, переименованный как mt6755, для того чтобы Android его загружал при старте.
+
+**Окончательное решение проблемы** с Fingerprint'ом состоит в следующем:
+
+* Для того чтобы сканирование отпечатка не падало в Settings нужен symlink - gatekeeper.mt6755.so -> libMcGatekeeper.so, он есть в system.img в оригинальной прошивке. Также, т.к. HAL'ом fingerprint'а является BLOB fingerprint.goodix.so, делаем symlink - fingerprint.mt6755.so -> fingerprint.goodix.so . fingerprint.mt6755.so, который есть на стоке для FPC, а не для Goodix и здесь не используется. Более того Gionee внесли изменения в libhardware, чтобы определять какой датчик используется и загружать соответствующий модуль. Поэтому на стоковой прошивке при наличии установленного флага persist.sys.fp_vendor = goodix (сам флаг устанавливается в goodixfingerprintd) libhardware подгружал модуль fingerprint.goodix.so. Т.к. наш libhardware полностью стоковый, а другого сканера у нас все равно нет, то гораздо проще сделать symlink в system.img для  fingerprint.mt6755.so -> fingerprint.goodix.so.
+* Без соответствующих разрешающих sepolicy для **mobicore_data_file** в installd.te и kernel.te правила для создания необходимых папок в init'ах, в частности вот эти:
+
+	    mkdir /data/app/mcRegistry 0775 system system
+	    mkdir /data/app/mcRegistry/TbStorage 0775 system system
 	
+Не срабатывали, в результате при загрузке системы папка mcRegistry и 	mcRegistry/TbStorage в /data/app просто отсутствовали и отсканированные отпечатки при всем желании не могли сохраниться в базу. Т.к. необходимого пути  /data/app/mcRegistry физически не существовало.
+* Такое же разрешение для mobicore_data_file:dir я добавил и в init.te, т.е.:
+
+	allow init mobicore_data_file:dir { r_file_perms write remove_name rmdir };
+
+Плюс еще одна странность ... в момент инициализации прошивки папка  /data/app/mcRegistry/ есть, но уже после ее инициализации, когда появился экран первоначальной настройки она почему-то отсутствует. Видимо что-то ее удаляет.
+
 
 ### Remote IR
 
