@@ -1,10 +1,25 @@
 # system.prop
 
-rild.libpath=mtk-ril.so
-rild.libargs=-d /dev/ttyC0
-
-#rild.libpath=/system/lib64/mtk-ril.so
+#rild.libpath=mtk-ril.so
 #rild.libargs=-d /dev/ttyC0
+
+rild.libpath=/system/lib64/mtk-ril.so
+rild.libargs=-d /dev/ttyC0
+ril.specific.sm_cause=0
+ril.external.md
+ril.current.share_modem=2
+ril.flightmode.poweroffMD=1
+ril.telephony.mode=0
+ril.radiooff.poweroffMD=0
+ro.mtk_enable_md1=1
+ro.telephony.default_network=9
+ro.telephony.sim.count=2
+persist.radio.default.sim=0
+persist.radio.multisim.config=dsds
+persist.radio.fd.counter=15
+persist.radio.fd.off.counter=5
+persist.radio.fd.r8.counter=15
+persist.radio.fd.off.r8.counter=5
 
 
 # MTK, Infinity, 20090720 {
@@ -70,7 +85,7 @@ ro.mtk_perfservice_support=1
 
 persist.logd.logpersistd=logcatd
 
-ro.telephony.default_network=9
+#ro.telephony.default_network=9
 
 # ClearMotion
 persist.sys.display.clearMotion=0
