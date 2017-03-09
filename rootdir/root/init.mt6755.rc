@@ -106,7 +106,6 @@ on fs
     exec /system/bin/chown root:system /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/para
     exec /system/bin/chmod 0660 /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/logo
     exec /system/bin/chown root:system /dev/block/platform/mtk-msdc.0/11230000.msdc0/by-name/logo
-
     write /proc/bootprof "INIT:Mount_END"
 
 on fs
@@ -115,6 +114,7 @@ on fs
 
 on post-fs
     write /proc/bootprof "INIT:post-fs"
+
     # Support legacy paths
     symlink /sdcard /storage/sdcard0
 
@@ -1725,11 +1725,13 @@ service goodixfpd /system/bin/goodixfingerprintd
     class main
     user system
     group system
+    seclabel u:r:goodixfingerprintd:s0
 
 service fingerprintd /system/bin/fingerprintd
     class main
     user system
     group system
+    seclabel u:r:fingerprintd:s0
 # goodix fingerprint end
 
 #gionee mazuyu add for fingerprint  end

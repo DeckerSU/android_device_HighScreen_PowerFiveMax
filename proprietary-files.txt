@@ -161,7 +161,7 @@ lib{,64}/hw/gralloc.default.so
 lib{,64}/hw/mmsdk.default.so
 lib{,64}/hw/keystore.default.so
 lib{,64}/hw/hwcomposer.mt6755.so
-lib{,64}/hw/gps.mt6755.so
+#lib{,64}/hw/gps.mt6755.so
 lib{,64}/hw/audio.primary.mt6755.so
 lib{,64}/hw/vibrator.default.so
 lib{,64}/hw/gralloc.mt6755.so
@@ -422,3 +422,21 @@ app/mcRegistry/9073f03a9618383bb1856eb3f990babd.tlbin
 app/mcRegistry/98fb95bcb4bf42d26473eae48690d7ea.tlbin
 app/mcRegistry/e97c270ea5c44c58bcd3384a2fa2539e.tlbin
 
+bin/audiocmdservice_atci
+
+lib{,64}/hw/consumerir.default.so
+lib{,64}/libsmartir_v_2_0_1.so
+bin/meta_tst
+lib{,64}/hw/remoteir.default.so
+
+lib{,64}/hw/fingerprint.goodix.so
+#lib{,64}/hw/fingerprint.mt6755.so
+lib{,64}/hw/libMcGatekeeper.so
+#lib{,64}/lib_fpc_tac_shared.so
+lib{,64}/libgf_algo.so
+lib{,64}/libgf_ca.so
+lib{,64}/libgf_hal.so
+lib{,64}/libMcRegistry.so
+lib{,64}/libgoodixfingerprintd_binder.so
+bin/goodixfingerprintd
+#lib{,64}/libcom_fingerprints_service.so

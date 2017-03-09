@@ -14,7 +14,7 @@ debug.hwui.render_dirty_regions=false \
 ro.sf.lcd_density=480 \
 persist.radio.multisim.config=dsds \
 ro.mtk_lte_support=1 \
-ro.telephony.ril_class=MT6755 \
+ro.telephony.ril_class=MT6735 \
 ro.telephony.ril.config=fakeiccid \
 ro.telephony.sim.count=2 \
 persist.gemini.sim_num=2 \
@@ -57,7 +57,6 @@ PRODUCT_PACKAGES += \
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
-    $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml \
     $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/etc/media_codecs_performance.xml \
     $(LOCAL_PATH)/audio/audio_policy.conf:system/etc/audio_policy.conf \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
@@ -110,10 +109,13 @@ PRODUCT_COPY_FILES += \
 
 # Thermal
 PRODUCT_COPY_FILES += \
+     $(LOCAL_PATH)/configs/.thermal_policy_00:system/etc/.tp/.thermal_policy_00 \
+     $(LOCAL_PATH)/configs/.thermal_policy_01:system/etc/.tp/.thermal_policy_01 \
+     $(LOCAL_PATH)/configs/.thermal_policy_02:system/etc/.tp/.thermal_policy_02 \
+     $(LOCAL_PATH)/configs/.thermal_meta.conf:system/etc/.tp/.thermal_meta.conf \
      $(LOCAL_PATH)/configs/thermal.conf:system/etc/.tp/thermal.conf \
      $(LOCAL_PATH)/configs/thermal.off.conf:system/etc/.tp/thermal.off.conf \
-     $(LOCAL_PATH)/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc \
-     #$(LOCAL_PATH)/configs/thermalstress.cfg:system/etc/.tp/thermalstress.cfg
+     $(LOCAL_PATH)/configs/.ht120.mtc:system/etc/.tp/.ht120.mtc
 
 # Ramdisk
 PRODUCT_COPY_FILES += \
@@ -210,7 +212,8 @@ PRODUCT_PACKAGES += \
 
 # 3rd-party apps
 PRODUCT_PACKAGES += \
-	Telegram+3.16.1
+	Telegram+3.16.1 \
+	Peel
 
 
 #Hack for prebuilt kernel
@@ -341,3 +344,7 @@ PRODUCT_PACKAGES += \
     libtinycompress \
     libtinyxml \
     tinymix
+
+PRODUCT_PACKAGES += \
+    GFManager \
+    FingerprintServiceExtension

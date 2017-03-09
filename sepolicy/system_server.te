@@ -15,3 +15,7 @@ allow system_server wmtWifi_device:chr_file w_file_perms;
 
 # MTKLogger
 allow system_server mtklogger_data_file:dir { search getattr };
+
+# Operation : Goodix FP
+# Purpose : Give Goodix Fingerprint device R/W permissions
+allow system_server goodixfingerprintd_device:chr_file rw_file_perms;

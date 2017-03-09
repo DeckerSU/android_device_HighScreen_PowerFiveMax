@@ -4,3 +4,13 @@ allow kernel self:capability dac_override;
 allow kernel wifi_data_file:dir search;
 allow kernel wifi_data_file:file r_file_perms;
 
+# Date : WK15.38
+# Operation : Migration
+# Purpose : grant proc_thermal for dir search
+allow kernel proc_thermal:dir search;
+allow kernel mobicore_data_file:file read;
+allow kernel mobicore_data_file:file open;
+allow kernel mobicore_data_file:file getattr;
+allow kernel mobicore_data_file:file write;
+allow kernel mobicore_data_file:file rename;
+
