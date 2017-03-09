@@ -163,3 +163,5 @@
 # /dev/gf66xx-spi u:object_r:goodixfingerprintd_device:s0 
 # /dev/goodix_fp* u:object_r:goodixfingerprintd_device:s0 
 /dev/ttyACM[0-9]* u:object_r:goodixfingerprintd_device:s0 
+
+

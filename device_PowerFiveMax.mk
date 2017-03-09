@@ -14,7 +14,8 @@ debug.hwui.render_dirty_regions=false \
 ro.sf.lcd_density=480 \
 persist.radio.multisim.config=dsds \
 ro.mtk_lte_support=1 \
-ro.telephony.ril_class=MT6735 \
+ro.kernel.android.checkjni=0 \
+ro.telephony.ril_class=MT6755 \
 ro.telephony.ril.config=fakeiccid \
 ro.telephony.sim.count=2 \
 persist.gemini.sim_num=2 \
@@ -64,6 +65,25 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_video_le.xml:system/etc/media_codecs_google_video_le.xml \
     $(LOCAL_PATH)/configs/media_codecs_mediatek_audio.xml:system/etc/media_codecs_mediatek_audio.xml \
     $(LOCAL_PATH)/configs/media_codecs_mediatek_video.xml:system/etc/media_codecs_mediatek_video.xml
+
+# RIL Proprietary
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilt/RIL/bin/gsm0710muxd:system/bin/gsm0710muxd \
+    $(LOCAL_PATH)/prebuilt/RIL/bin/gsm0710muxdmd2:system/bin/gsm0710muxdmd2 \
+    $(LOCAL_PATH)/prebuilt/RIL/bin/mtkrild:system/bin/mtkrild \
+    $(LOCAL_PATH)/prebuilt/RIL/bin/mtkrildmd2:system/bin/mtkrildmd2 \
+    $(LOCAL_PATH)/prebuilt/RIL/lib/libmal.so:system/lib/libmal.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib/libmdfx.so:system/lib/libmdfx.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib/librilmtk.so:system/lib/librilmtk.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib/librilmtkmd2.so:system/lib/librilmtkmd2.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib/mtk-ril.so:system/lib/mtk-ril.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib/mtk-rilmd2.so:system/lib/mtk-rilmd2.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib64/libmal.so:system/lib64/libmal.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib64/libmdfx.so:system/lib64/libmdfx.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib64/librilmtk.so:system/lib64/librilmtk.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib64/librilmtkmd2.so:system/lib64/librilmtkmd2.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib64/mtk-ril.so:system/lib64/mtk-ril.so \
+    $(LOCAL_PATH)/prebuilt/RIL/lib64/mtk-rilmd2.so:system/lib64/mtk-rilmd2.so
 
 # Wifi
 PRODUCT_PACKAGES += \
