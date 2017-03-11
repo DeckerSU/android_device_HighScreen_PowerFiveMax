@@ -127,10 +127,8 @@ LOCAL_PATH := \$(call my-dir)
 # Making symlinks in system.img 
 \$(shell ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib64/hw/gatekeeper.mt6755.so; \\
 	ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib64/hw/gatekeeper.gnbj6755_66_m.so; \\
-	ln -sf fingerprint.goodix.so \$(TARGET_OUT)/lib64/hw/fingerprint.mt6755.so; \\
 	ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib/hw/gatekeeper.mt6755.so; \\
-	ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib/hw/gatekeeper.gnbj6755_66_m.so; \\
-	ln -sf fingerprint.goodix.so \$(TARGET_OUT)/lib/hw/fingerprint.mt6755.so; )
+	ln -sf libMcGatekeeper.so \$(TARGET_OUT)/lib/hw/gatekeeper.gnbj6755_66_m.so; )
 
 #include \$(CLEAR_VARS)
 #LOCAL_MODULE := libdpframework
